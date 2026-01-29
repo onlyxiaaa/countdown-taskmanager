@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown Keeper - macOS</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=SF+Pro+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body data-theme="light">
+    <!-- macOS Desktop -->
+    <div class="desktop">
+        <!-- Menu Bar -->
+        <div class="menu-bar">
+            <div class="menu-left">
+                <span class="apple-logo"></span>
+                <span class="menu-item active">Finder</span>
+                <span class="menu-item">File</span>
+                <span class="menu-item">Edit</span>
+                <span class="menu-item">View</span>
+            </div>
+            <div class="menu-right">
+                <span class="menu-icon" id="musicIcon">🎵</span>
+                <span class="menu-icon" id="themeToggle" title="Toggle Dark Mode">🌙</span>
+                <span class="menu-icon">🔋</span>
+                <span class="menu-icon">📶</span>
+                <span class="menu-time" id="menuTime">12:00 PM</span>
+            </div>
+        </div>
+
+        <!-- Desktop Background -->
+        <div class="desktop-bg" id="desktopBg">
+            <!-- Floating background elements -->
+            <div class="bg-decoration star-1">✨</div>
+            <div class="bg-decoration star-2">⭐</div>
+            <div class="bg-decoration star-3">💫</div>
+            <div class="bg-decoration star-4">🌟</div>
+        </div>
+
+        <!-- Finder Window -->
+        <div class="window finder-window" id="finderWindow">
+            <div class="window-header">
+                <div class="window-controls">
+                    <span class="control-btn close" onclick="closeWindow('finderWindow')"></span>
+                    <span class="control-btn minimize"></span>
+                    <span class="control-btn maximize"></span>
+                </div>
+                <div class="window-title">Countdown Keeper</div>
+            </div>
+            <div class="window-content finder-content">
+                <div class="finder-sidebar">
+                    <div class="sidebar-section">
+                        <div class="sidebar-label">Favorites</div>
+                        <div class="finder-item">
+                            <span class="finder-icon">⭐</span>
+                            <span>Applications</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="finder-main">
+                    <div class="finder-grid">
+                        <div class="app-icon" data-app="calendar">
+                            <div class="icon-image">📅</div>
+                            <div class="icon-label">Calendar</div>
+                        </div>
+                        <div class="app-icon" data-app="notes">
+                            <div class="icon-image">📝</div>
+                            <div class="icon-label">Notes</div>
+                        </div>
+                        <div class="app-icon" data-app="countdown">
+                            <div class="icon-image">⏰</div>
+                            <div class="icon-label">My Countdowns</div>
+                        </div>
+                        <div class="app-icon" data-app="create">
+                            <div class="icon-image">✨</div>
+                            <div class="icon-label">New Countdown</div>
+                        </div>
+                        <div class="app-icon" data-app="pomodoro">
+                            <div class="icon-image">🍅</div>
+                            <div class="icon-label">Pomodoro</div>
+                        </div>
+                        <div class="app-icon" data-app="quotes">
+                            <div class="icon-image">💭</div>
+                            <div class="icon-label">Motivation</div>
+                        </div>
+                        <div class="app-icon" data-app="music">
+                            <div class="icon-image">🎧</div>
+                            <div class="icon-label">Music Player</div>
+                        </div>
+                        <div class="app-icon" data-app="settings">
+                            <div class="icon-image">⚙️</div>
+                            <div class="icon-label">Settings</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calendar Window -->
+        <div class="window app-window" id="calendarWindow">
+            <div class="window-header">
+                <div class="window-controls">
+                    <span class="control-btn close" onclick="closeWindow('calendarWindow')"></span>
+                    <span class="control-btn minimize" onclick="minimizeWindow('calendarWindow')"></span>
+                    <span class="control-btn maximize" onclick="maximizeWindow('calendarWindow')"></span>
+                </div>
+                <div class="window-title">📅 Calendar</div>
+            </div>
+            <div class="window-content">
+                <div class="app-container">
+                    <div class="calendar-header">
+                        <button id="prevMonth" class="btn-nav-month">←</button>
+                        <h2 id="calendarMonthYear" class="calendar-month-year">January 2026</h2>
+                        <button id="nextMonth" class="btn-nav-month">→</button>
+                    </div>
+                    <div class="calendar-container">
+                        <div class="calendar-weekdays">
+                            <div class="weekday">Sun</div>
+                            <div class="weekday">Mon</div>
+                            <div class="weekday">Tue</div>
+                            <div class="weekday">Wed</div>
+                            <div class="weekday">Thu</div>
+                            <div class="weekday">Fri</div>
+                            <div class="weekday">Sat</div>
+                        </div>
+                        <div id="calendarDays" class="calendar-days">
+                            <!-- Calendar days will be generated here -->
+                        </div>
+                    </div>
+                    <div class="calendar-events">
+                        <h3 class="events-title">Upcoming Events</h3>
+                        <div id="upcomingEvents" class="upcoming-events-list">
+                            <!-- Events will be listed here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Window -->
+        <div class="window app-window" id="settingsWindow">
+            <div class="window-header">
+                <div class="window-controls">
+                    <span class="control-btn close" onclick="closeWindow('settingsWindow')"></span>
+                    <span class="control-btn minimize" onclick="minimizeWindow('settingsWindow')"></span>
+                    <span class="control-btn maximize" onclick="maximizeWindow('settingsWindow')"></span>
+                </div>
+                <div class="window-title">⚙️ Settings</div>
+            </div>
+            <div class="window-content">
+                <div class="app-container">
+                    <h2 class="app-heading">Appearance & Wallpaper</h2>
+                    
+                    <!-- Dark Mode Toggle -->
+                    <div class="settings-section">
+                        <h3 class="settings-section-title">🌓 Theme</h3>
+                        <div class="setting-row">
+                            <div class="setting-info">
+                                <div class="setting-label">Dark Mode</div>
+                                <div class="setting-description">Switch between light and dark theme</div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="darkModeToggle">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Wallpaper Section -->
+                    <div class="settings-section">
+                        <h3 class="settings-section-title">🖼️ Wallpaper</h3>
+                        
+                        <!-- Preset Colors -->
+                        <div class="setting-group">
+                            <label class="setting-label">Preset Colors</label>
+                            <div class="wallpaper-presets">
+                                <button class="wallpaper-preset active" data-wallpaper="gradient-pink" style="background: linear-gradient(135deg, #FFE5EC 0%, #E5E5FF 50%, #E5FFF0 100%);"></button>
+                                <button class="wallpaper-preset" data-wallpaper="gradient-blue" style="background: linear-gradient(135deg, #E0F4FF 0%, #D4E7FF 50%, #E0F0FF 100%);"></button>
+                                <button class="wallpaper-preset" data-wallpaper="gradient-purple" style="background: linear-gradient(135deg, #F0E5FF 0%, #E5D4FF 50%, #F5E5FF 100%);"></button>
+                                <button class="wallpaper-preset" data-wallpaper="gradient-green" style="background: linear-gradient(135deg, #E5FFF0 0%, #D4FFE5 50%, #E5FFEA 100%);"></button>
+                                <button class="wallpaper-preset" data-wallpaper="gradient-sunset" style="background: linear-gradient(135deg, #FFE5D9 0%, #FFDAB9 50%, #FFE5D4 100%);"></button>
+                                <button class="wallpaper-preset" data-wallpaper="gradient-ocean" style="background: linear-gradient(135deg, #D4F4FF 0%, #B4E4FF 50%, #D4EEFF 100%);"></button>
+                            </div>
+                        </div>
+
+                        <!-- Custom Solid Color -->
+                        <div class="setting-group">
+                            <label class="setting-label">Custom Solid Color</label>
+                            <div class="color-input-group">
+                                <input type="color" id="solidColorPicker" value="#FFE5EC">
+                                <button id="applySolidColor" class="btn-apply">Apply Solid Color</button>
+                            </div>
+                        </div>
+
+                        <!-- Custom Image -->
+                        <div class="setting-group">
+                            <label class="setting-label">Custom Image</label>
+                            <div class="image-input-group">
+                                <input type="file" id="wallpaperImageInput" accept="image/*" style="display: none;">
+                                <button id="chooseImageBtn" class="btn-choose-file">📁 Choose Image</button>
+                                <button id="removeImageBtn" class="btn-remove" style="display: none;">Remove Image</button>
+                            </div>
+                            <p class="input-hint">Upload your own wallpaper image</p>
+                        </div>
+
+                        <!-- Reset Button -->
+                        <button id="resetWallpaper" class="btn-reset-wallpaper">Reset to Default</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notes Window -->
+        <div class="window app-window" id="notesWindow">
+            <div class="window-header">
+                <div class="window-controls">
+                    <span class="control-btn close" onclick="closeWindow('notesWindow')"></span>
+                    <span class="control-btn minimize" onclick="minimizeWindow('notesWindow')"></span>
+                    <span class="control-btn maximize" onclick="maximizeWindow('notesWindow')"></span>
+                </div>
+                <div class="window-title">📝 Notes</div>
+            </div>
+            <div class="window-content notes-content">
+                <!-- Notes Sidebar -->
+                <div class="notes-sidebar">
+                    <div class="notes-sidebar-header">
+                        <button id="newNoteBtn" class="btn-new-note">
+                            <span>+</span> New Note
+                        </button>
+                    </div>
+                    <div class="notes-list" id="notesList">
+                        <!-- Notes list will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Notes Editor -->
+                <div class="notes-editor">
+                    <div class="notes-empty-state" id="notesEmptyState">
+                        <div class="empty-note-icon">📝</div>
+                        <p>Select a note or create a new one</p>
+                    </div>
+
+                    <div class="notes-editor-area" id="notesEditorArea" style="display: none;">
+                        <!-- Toolbar -->
+                        <div class="notes-toolbar">
+                            <input type="text" id="noteTitle" class="note-title-input" placeholder="Title">
+                            <div class="toolbar-actions">
+                                <button id="noteTypeToggle" class="btn-toggle-type" title="Switch to checklist">
+                                    <span id="noteTypeIcon">☑️</span>
+                                </button>
+                                <button id="deleteNoteBtn" class="btn-delete-note" title="Delete note">
+                                    🗑️
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Note Content Area -->
+                        <div id="noteContentArea" class="note-content-area">
+                            <!-- Regular Note -->
+                            <div id="regularNoteContent" class="regular-note-content">
+                                <textarea id="noteText" class="note-textarea" placeholder="Start typing your note..."></textarea>
+                            </div>
+
+                            <!-- Checklist -->
+                            <div id="checklistContent" class="checklist-content" style="display: none;">
+                                <div id="checklistItems" class="checklist-items">
+                                    <!-- Checklist items will be added here -->
+                                </div>
+                                <div class="add-checklist-item">
+                                    <input type="text" id="newChecklistItem" class="new-checklist-input" placeholder="Add item...">
+                                    <button id="addChecklistBtn" class="btn-add-item">+</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Note Metadata -->
+                        <div class="note-metadata">
+                            <span id="noteDate" class="note-date"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- New Countdown Window -->
+        <div class="window app-window" id="createWindow">
+            <div class="window-header">
+                <div class="window-controls">
+                    <span class="control-btn close" onclick="closeWindow('createWindow')"></span>
+                    <span class="control-btn minimize" onclick="minimizeWindow('createWindow')"></span>
+                    <span class="control-btn maximize" onclick="maximizeWindow('createWindow')"></span>
+                </div>
+                <div class="window-title">✨ New Countdown</div>
+            </div>
+            <div class="window-content">
+                <div class="app-container">
+                    <h2 class="app-heading">Create New Countdown</h2>
+                    <form id="countdownForm" class="countdown-form">
+                        <div class="form-group">
+                            <label for="eventName">Event Name</label>
+                            <input type="text" id="eventName" placeholder="e.g., Final Exam, Project Due" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="eventDate">Date</label>
+                                <input type="date" id="eventDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="eventTime">Time</label>
+                                <input type="time" id="eventTime" value="23:59">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Choose Icon</label>
+                            <div class="icon-picker" id="iconPicker">
+                                <button type="button" class="icon-btn active" data-icon="📚">📚</button>
+                                <button type="button" class="icon-btn" data-icon="💼">💼</button>
+                                <button type="button" class="icon-btn" data-icon="🔬">🔬</button>
+                                <button type="button" class="icon-btn" data-icon="💻">💻</button>
+                                <button type="button" class="icon-btn" data-icon="🎨">🎨</button>
+                                <button type="button" class="icon-btn" data-icon="⚽">⚽</button>
+                                <button type="button" class="icon-btn" data-icon="🎮">🎮</button>
+                                <button type="button" class="icon-btn" data-icon="🎵">🎵</button>
+                                <button type="button" class="icon-btn" data-icon="✈️">✈️</button>
+                                <button type="button" class="icon-btn" data-icon="🎂">🎂</button>
+                                <button type="button" class="icon-btn" data-icon="💍">💍</button>
+                                <button type="button" class="icon-btn" data-icon="🏆">🏆</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Choose Color</label>
+                            <div class="color-picker" id="colorPicker">
+                                <button type="button" class="color-btn active" data-color="#FFB3D9" style="background: #FFB3D9;"></button>
+                                <button type="button" class="color-btn" data-color="#E0BBE4" style="background: #E0BBE4;"></button>
+                                <button type="button" class="color-btn" data-color="#B4D4FF" style="background: #B4D4FF;"></button>
+                                <button type="button" class="color-btn" data-color="#B4E7CE" style="background: #B4E7CE;"></button>
+                                <button type="button" class="color-btn" data-color="#FFDAB9" style="background: #FFDAB9;"></button>
+                                <button type="button" class="color-btn" data-color="#D4C5F9" style="background: #D4C5F9;"></button>
+                                <button type="button" class="color-btn" data-color="#FFF4CC" style="background: #FFF4CC;"></button>
+                                <button type="button" class="color-btn" data-color="#FFB5B5" style="background: #FFB5B5;"></button>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-submit">🎉 Add Countdown</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- My Countdowns Window -->
+        <div class="window app-window" id="countdownWindow">
+            <div class="window-header">
+                <div class="window-controls">
+                    <span class="control-btn close" onclick="closeWindow('countdownWindow')"></span>
+                    <span class="control-btn minimize" onclick="minimizeWindow('countdownWindow')"></span>
+                    <span class="control-btn maximize" onclick="maximizeWindow('countdownWindow')"></span>
+                </div>
+                <div class="window-title">⏰ My Countdowns</div>
+            </div>
+            <div class="window-content">
+                <div class="app-container">
+                    <h2 class="app-heading">Your Countdowns</h2>
+                    <div id="countdownsList" class="countdowns-list">
+                        <!-- Countdowns will be added here dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pomodoro Window -->
+        <div class="window app-window" id="pomodoroWindow">
+            <div class="window-header">
+                <div class="window-controls">
+                    <span class="control-btn close" onclick="closeWindow('pomodoroWindow')"></span>
+                    <span class="control-btn minimize" onclick="minimizeWindow('pomodoroWindow')"></span>
+                    <span class="control-btn maximize" onclick="maximizeWindow('pomodoroWindow')"></span>
+                </div>
+                <div class="window-title">🍅 Pomodoro Timer</div>
+            </div>
+            <div class="window-content">
+                <div class="app-container">
+                    <div class="pomodoro-timer">
+                        <div class="timer-display" id="timerDisplay">25:00</div>
+                        <div class="timer-controls">
+                            <button id="startTimer" class="btn-timer btn-start">Start</button>
+                            <button id="pauseTimer" class="btn-timer btn-pause">Pause</button>
+                            <button id="resetTimer" class="btn-timer btn-reset">Reset</button>
+                        </div>
+                        <div class="timer-modes">
+                            <button class="mode-btn active" data-mode="work">Work</button>
+                            <button class="mode-btn" data-mode="short">Short Break</button>
+                            <button class="mode-btn" data-mode="long">Long Break</button>
+                        </div>
+                        
+                        <!-- Custom Timer Settings -->
+                        <div class="timer-settings">
+                            <h3 class="settings-title">⚙️ Custom Timer Settings</h3>
+                            <div class="settings-grid">
+                                <div class="setting-item">
+                                    <label for="workDuration">Work Duration (minutes)</label>
+                                    <input type="number" id="workDuration" min="1" max="120" value="25">
+                                </div>
+                                <div class="setting-item">
+                                    <label for="shortBreakDuration">Short Break (minutes)</label>
+                                    <input type="number" id="shortBreakDuration" min="1" max="60" value="5">
+                                </div>
+                                <div class="setting-item">
+                                    <label for="longBreakDuration">Long Break (minutes)</label>
+                                    <input type="number" id="longBreakDuration" min="1" max="60" value="15">
+                                </div>
+                            </div>
+                            <button id="saveTimerSettings" class="btn-save-settings">💾 Save Settings</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quotes Window -->
+        <div class="window app-window" id="quotesWindow">
+            <div class="window-header">
+                <div class="window-controls">
+                    <span class="control-btn close" onclick="closeWindow('quotesWindow')"></span>
+                    <span class="control-btn minimize" onclick="minimizeWindow('quotesWindow')"></span>
+                    <span class="control-btn maximize" onclick="maximizeWindow('quotesWindow')"></span>
+                </div>
+                <div class="window-title">💭 Daily Motivation</div>
+            </div>
+            <div class="window-content">
+                <div class="app-container">
+                    <div class="quote-card">
+                        <p class="quote-text" id="quoteText">"The secret of getting ahead is getting started."</p>
+                        <p class="quote-author" id="quoteAuthor">- Mark Twain</p>
+                        <button id="newQuote" class="btn-quote">✨ New Quote</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Music Player Window -->
+        <div class="window app-window" id="musicWindow">
+            <div class="window-header">
+                <div class="window-controls">
+                    <span class="control-btn close" onclick="closeWindow('musicWindow')"></span>
+                    <span class="control-btn minimize" onclick="minimizeWindow('musicWindow')"></span>
+                    <span class="control-btn maximize" onclick="maximizeWindow('musicWindow')"></span>
+                </div>
+                <div class="window-title">🎧 Music Player</div>
+            </div>
+            <div class="window-content">
+                <div class="app-container">
+                    <div class="music-player">
+                        <h2 class="app-heading">Choose Your Music</h2>
+                        
+                        <!-- Music Source Selection -->
+                        <div class="music-source-tabs">
+                            <button class="source-tab active" data-source="default">
+                                🎵 Default Music
+                            </button>
+                            <button class="source-tab" data-source="spotify">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+                                </svg>
+                                Spotify
+                            </button>
+                        </div>
+
+                        <!-- Default Music Player -->
+                        <div class="music-content active" id="defaultMusicContent">
+                            <div class="default-player">
+                                <div class="now-playing">
+                                    <div class="album-art">🎵</div>
+                                    <div class="track-info">
+                                        <div class="track-name">Calming Meditation</div>
+                                        <div class="artist-name">Ambient Sounds</div>
+                                    </div>
+                                </div>
+                                <div class="player-controls">
+                                    <button id="playPauseBtn" class="control-button">
+                                        <span id="playIcon">▶️</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Spotify Player -->
+                        <div class="music-content" id="spotifyMusicContent">
+                            <div class="spotify-connect">
+                                <div class="spotify-info">
+                                    <p>🎧 Connect your Spotify account to play your favorite playlists and albums!</p>
+                                    <p class="spotify-note">⚠️ Important: You must be logged into Spotify in your browser for full playback. Otherwise, you'll only hear 30-second previews.</p>
+                                    <p class="spotify-note">💡 Tip: Open <a href="https://open.spotify.com" target="_blank" style="color: white; text-decoration: underline;">Spotify Web Player</a> in a new tab and log in first!</p>
+                                </div>
+                                
+                                <div class="spotify-input-group">
+                                    <label for="spotifyUri">Spotify Playlist/Album URI or Link</label>
+                                    <input type="text" id="spotifyUri" placeholder="spotify:playlist:37i9dQZF1DXcBWIGoYBM5M or paste Spotify link">
+                                    <p class="input-hint">💡 Right-click any playlist/album in Spotify → Share → Copy Link</p>
+                                </div>
+
+                                <button id="loadSpotifyBtn" class="btn-spotify">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+                                    </svg>
+                                    Load Spotify Music
+                                </button>
+
+                                <!-- Spotify Player Container -->
+                                <div id="spotifyPlayerContainer"></div>
+                                
+                                <div id="spotifyLoginReminder" class="spotify-reminder" style="display: none;">
+                                    <p>🔐 Not getting full playback?</p>
+                                    <p>Make sure you're logged into <a href="https://open.spotify.com" target="_blank" style="color: inherit; font-weight: bold;">Spotify Web Player</a> in this browser!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dock -->
+        <div class="dock">
+            <div class="dock-container">
+                <div class="dock-item" data-window="finderWindow">
+                    <div class="dock-icon">📁</div>
+                    <div class="dock-label">Finder</div>
+                </div>
+                <div class="dock-separator"></div>
+                <div class="dock-item" data-window="calendarWindow">
+                    <div class="dock-icon">📅</div>
+                    <div class="dock-label">Calendar</div>
+                </div>
+                <div class="dock-item" data-window="notesWindow">
+                    <div class="dock-icon">📝</div>
+                    <div class="dock-label">Notes</div>
+                </div>
+                <div class="dock-item" data-window="createWindow">
+                    <div class="dock-icon">✨</div>
+                    <div class="dock-label">New Countdown</div>
+                </div>
+                <div class="dock-item" data-window="countdownWindow">
+                    <div class="dock-icon">⏰</div>
+                    <div class="dock-label">My Countdowns</div>
+                </div>
+                <div class="dock-item" data-window="pomodoroWindow">
+                    <div class="dock-icon">🍅</div>
+                    <div class="dock-label">Pomodoro</div>
+                </div>
+                <div class="dock-item" data-window="quotesWindow">
+                    <div class="dock-icon">💭</div>
+                    <div class="dock-label">Motivation</div>
+                </div>
+                <div class="dock-item" data-window="musicWindow">
+                    <div class="dock-icon">🎧</div>
+                    <div class="dock-label">Music Player</div>
+                </div>
+                <div class="dock-item" data-window="settingsWindow">
+                    <div class="dock-icon">⚙️</div>
+                    <div class="dock-label">Settings</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio element for background music -->
+    <audio id="bgMusic" loop>
+        <source src="https://www.bensound.com/bensound-music/bensound-slowmotion.mp3" type="audio/mpeg">
+    </audio>
+
+    <script src="script.js"></script>
+</body>
+</html>
